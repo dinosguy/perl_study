@@ -160,7 +160,8 @@ sub MakeSheet {
 
     $cnt=0;
     my $cnt1 =0;
-    
+    my $cntY =0;
+   
     foreach $row ($row_min .. $row_max){
         if($row > 0 and $row < $row_max-1){
             ($Crent_date, $Nxt_date) = ($sheetCol0[$row],$sheetCol0[$row+1]);
@@ -170,27 +171,36 @@ sub MakeSheet {
             $Nxt_date   =~ m{(\d+)\w(\d+)\w(\d+)};
             $Nxt_date   = "$1-$2-$3";
             # Ysana
-            if (($sheetCol2[$row] eq "$Ysana")){
-                if ($cnt1 = 1){
-                    $min_time = $sheetCol1[$row];
-                    $max_time = $sheetCol1[$row];
-                }
-                elsif ($max_time <$sheetCol1[$row]){
-                    print "max time: $max_time\n";
-                }
-
+            if($cntY eq 0){
+                $worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
+                $worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
+                $worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
             }
-            if($Crent_date ne $Nxt_date){
-                print "Current_date: $Crent_date, Next date: $Nxt_date\n";
+            elsif($Crent_date ne $Nxt_date){
+                if (($sheetCol2[$row] eq "$Ysana")){
+                    $worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
+                    $worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
+                    $worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
+                    $cntY= $cntY +1 ;
+                }
+                   print "Current_date: $Crent_date, Next date: $Nxt_date\n";
+                   print "$Crent_date : $cntY\n";
             }
-        }
-        $worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
-        $worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
-        $worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
+      }
+      #$worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
+      #$worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
+      #$worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
 
-        $cnt1 = $cnt1 +1;
-    }
+       $cnt1 = $cnt1 +1;
+   }
 
+              #if ($cnt1 = 1){
+              #    $min_time = $sheetCol1[$row];
+              #    $max_time = $sheetCol1[$row];
+              #}
+              #elsif ($max_time <$sheetCol1[$row]){
+              #    print "max time: $max_time\n";
+              #}
     #   foreach $row (1 .. $row_max){
     #       ($Crent_date, $Nxt_date) = ($sheetCol0[$row],$sheetCol0[$row+1]);
     #       #print " $Crent_date, $Nxt_date\n";
