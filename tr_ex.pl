@@ -146,6 +146,8 @@ sub MakeSheet {
     my $Nxt_date="";
     my $person = "";
     my $min_time ="";
+    my $max_time ="";
+
     my $workbook_0  = Spreadsheet::WriteExcel->new($ofile_name);
     my $worksheet_0 = $workbook_0->add_worksheet("new_sheet");
     my $format = $workbook_0->add_format();
@@ -154,7 +156,7 @@ sub MakeSheet {
     $format->set_size(10);
     $worksheet_0 -> set_column('A:A', 16);
     $worksheet_0 -> set_column('B:B', 13);
-    $worksheet_0 -> set_column('D:D', 13);
+    $worksheet_0 -> set_column('D:D', 14);
 
     $cnt=0;
     my $cnt1 =0;
@@ -167,11 +169,24 @@ sub MakeSheet {
             #print "Current_date: $Crent_date\n";
             $Nxt_date   =~ m{(\d+)\w(\d+)\w(\d+)};
             $Nxt_date   = "$1-$2-$3";
-            print "Current_date: $Crent_date, Next date: $Nxt_date\n";
+            # Ysana
+            if (($sheetCol2[$row] eq "$Ysana")){
+                if ($cnt1 = 1){
+                    $min_time = $sheetCol1[$row];
+                    $max_time = $sheetCol1[$row];
+                }
+                elsif ($max_time <$sheetCol1[$row]){
+                    print "max time: $max_time\n";
+                }
+
+            }
+            if($Crent_date ne $Nxt_date){
+                print "Current_date: $Crent_date, Next date: $Nxt_date\n";
+            }
         }
-        $worksheet_0 -> write($row+10,0, $sheetCol0[$row]);
-        $worksheet_0 -> write($row+10,1, $sheetCol1[$row]);
-        $worksheet_0 -> write($row+10,3, $sheetCol3[$row]);
+        $worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
+        $worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
+        $worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
 
         $cnt1 = $cnt1 +1;
     }
