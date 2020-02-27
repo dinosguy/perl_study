@@ -154,13 +154,16 @@ sub MakeSheet {
 
     $format->set_align("center");
     $format->set_size(10);
-    $worksheet_0 -> set_column('A:A', 16);
-    $worksheet_0 -> set_column('B:B', 13);
-    $worksheet_0 -> set_column('D:D', 14);
+    $worksheet_0 -> set_column('B:B', 16);
+    $worksheet_0 -> set_column('C:C', 13);
+    $worksheet_0 -> set_column('E:E', 14);
 
     $cnt=0;
     my $cnt1 =0;
     my $cntY =0;
+                $worksheet_0 -> write($cntY+9,1, $sheetCol0[$cntY]);
+                $worksheet_0 -> write($cntY+9,2, $sheetCol1[$cntY]);
+                $worksheet_0 -> write($cntY+9,4, $sheetCol3[$cntY]);
    
     foreach $row ($row_min .. $row_max){
         if($row > 0 and $row < $row_max-1){
@@ -171,18 +174,20 @@ sub MakeSheet {
             $Nxt_date   =~ m{(\d+)\w(\d+)\w(\d+)};
             $Nxt_date   = "$1-$2-$3";
             # Ysana
-            if($cntY eq 0){
-                $worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
-                $worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
-                $worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
-            }
-            elsif($Crent_date ne $Nxt_date){
-                if (($sheetCol2[$row] eq "$Ysana")){
-                    $worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
-                    $worksheet_0 -> write($row+10,2, $sheetCol1[$row]);
-                    $worksheet_0 -> write($row+10,4, $sheetCol3[$row]);
-                    $cntY= $cntY +1 ;
+            #if (($sheetCol2[$row] eq "$Ysana")and ($Crent_date eq $Nxt_date)){
+            if (($sheetCol2[$row] eq "$Ysana")and ($cntY < 1 ) ){
+                $worksheet_0 -> write($cntY+10,1, $sheetCol0[$row]);
+                $worksheet_0 -> write($cntY+10,2, $sheetCol1[$row]);
+                $worksheet_0 -> write($cntY+10,4, $sheetCol3[$row]);
+                if(($Crent_date eq $Nxt_date)){
+                    $cntY= $cntY + 1;
                 }
+            }
+            elsif(($Crent_date ne $Nxt_date)) {
+                $worksheet_0 -> write($cntY+10,1, $sheetCol0[$row]);
+                $worksheet_0 -> write($cntY+10,2, $sheetCol1[$row]);
+                $worksheet_0 -> write($cntY+10,4, $sheetCol3[$row]);
+                $cntY= 0;
                    print "Current_date: $Crent_date, Next date: $Nxt_date\n";
                    print "$Crent_date : $cntY\n";
             }
