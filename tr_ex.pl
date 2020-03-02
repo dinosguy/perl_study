@@ -17,9 +17,18 @@ my $ver = "Dino's Version1.0";
 my $rst =GetOptions (
    "v|ver|version"      => \&rver,
    "h|help"             => \my $help,
-  "i=s"        => \my $in_file,
-  "print_mac"          => \my $print_mac,
+   "print_mac"          => \my $print_mac,
+   "i=s"                => \my $in_file,
 );
+
+if ($help){
+    print "\n"x3;
+    usage(1,0);
+    print "help!!! \n";
+    exit(1);
+}
+
+
 
 my $parser      = Spreadsheet::ParseExcel->new();
 my $workbook    = $parser->parse($in_file);
@@ -47,43 +56,40 @@ my $cell="";
 my $row=0;
 my $col=0;
 
+
 if ($in_file){
-  print "input file: $in_file\n";
-  &GetSheet();
-  print " row min/max: $row_min, $row_max\n";
-  print " col min/max: $col_min, $col_max\n";
-
-  $in_file =~ m{(\w+)};
-  $ofile_name ="$1_v0.xls";
-  if(-e $ofile_name) {
-   print "exist \n";
-   system("del $ofile_name");
-  }
-
-  &MakeSheet();
-  exit(1);
-}
-if ( !defined $workbook ) {
-    die $parser->error(), ".\n";
-}
-
-if ($help){
-    print "\n"x3;
-    usage(1,0);
-    print "help!!! \n";
+    if ( !defined $workbook ) {
+        die $parser->error(), ".\n";
     }
+    print "input file: $in_file\n";
+    &GetSheet();
+    print " row min/max: $row_min, $row_max\n";
+    print " col min/max: $col_min, $col_max\n";
+
+    $in_file =~ m{(\w+)};
+    $ofile_name ="$1_v0.xls";
+    if(-e $ofile_name) {
+    print "exist \n";
+    system("del $ofile_name");
+    }
+
+    &MakeSheet();
+    exit(1);
+}
+
+if ($#ARGV <0 && !$print_mac ) {
+    &cur;
+    usage(1,2);
+    exit (1);
+}
 
 sub rver {
     print "\n"x3;
-    print "!$: $ver\n";
+    print "version: $ver\n";
     print "\n"x3;
     exit(1);
-    }
-if ($#ARGV <0 && !$print_mac ) {
-    &cur;
-    usage(0,2);
-    exit (1);
 }
+
 
 sub GetSheet {
  for $worksheet ( $workbook->worksheets() ) {
@@ -187,9 +193,9 @@ sub MakeSheet {
                 $worksheet_0 -> write($cntY+10,1, $sheetCol0[$row]);
                 $worksheet_0 -> write($cntY+10,2, $sheetCol1[$row]);
                 $worksheet_0 -> write($cntY+10,4, $sheetCol3[$row]);
+                print "Current_date: $Crent_date, Next date: $Nxt_date\n";
+                print "$Crent_date : $cntY\n";
                 $cntY= 0;
-                   print "Current_date: $Crent_date, Next date: $Nxt_date\n";
-                   print "$Crent_date : $cntY\n";
             }
       }
       #$worksheet_0 -> write($row+10,1, $sheetCol0[$row]);
@@ -267,9 +273,9 @@ sub usage {
 
 sub cur{
   warn 
-   "\n"x2;
+   "Worning \n"x2;
   warn 
-   "\n"x2;
+   "Worning \n"x2;
 }
 
 __DATA__
@@ -277,9 +283,13 @@ __DATA__
 =pod
 
 =head1 NAME
+    tr_ex.pl : [option -i, -h, -v]
 
 =head1 SYNOPSIS
- tr_ex.pl : [option -i, -h, -v]
+    tr_ex.pl : [option -i, -h, -v]
+            
+        [option]
+        -i input file 
 
 =cut
 
